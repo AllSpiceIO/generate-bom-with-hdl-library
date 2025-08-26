@@ -26,8 +26,10 @@ runs:
     - ${{ inputs.part_type_column_name }}
     - "--search_ptf_column_name"
     - ${{ inputs.search_ptf_column_name }}
-    - "--add_column"
-    - ${{ inputs.add_column }}
+    - "--include_ptf_columns"
+    - ${{ inputs.include_ptf_columns }}
+    - "--add_bom_columns"
+    - ${{ inputs.add_bom_columns }}
     - "--output_path"
     - "${{ github.workspace}}/${{ inputs.output_file_name }}"
     - ${{ inputs.bom_file }}
