@@ -31,5 +31,5 @@ runs:
     - "--add_bom_columns"
     - ${{ inputs.add_bom_columns }}
     - "--output_path"
-    - "${{ github.workspace}}/${{ inputs.output_file_name }}"
+    - "${{ github.workspace}}/${{ inputs.output_path }}"
     - ${{ inputs.bom_file }}
