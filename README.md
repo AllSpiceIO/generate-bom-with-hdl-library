@@ -85,7 +85,7 @@ jobs:
           path: library
 
       - name: Enrich BOM with library data
-        uses: ./.  # or hub URL if published
+        uses: https://github.com/AllSpiceIO/generate-bom-with-hdl-library@v0.1
         with:
           bom_file: base_bom.csv
           library_path: library
