@@ -66,41 +66,41 @@ name: Build Complete BOM
 on: [push]
 
 jobs:
-	bom:
-		runs-on: ubuntu-latest
-		steps:
-			- name: Checkout design repo
-				uses: actions/checkout@v4
+  bom:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout design repo
+        uses: actions/checkout@v4
 
-			- name: Generate base BOM
-				uses: https://hub.allspice.io/Actions/generate-bom@v0.8
-				with:
-					source_path: HardwareDesign.SDAX
-					output_file_name: base_bom.csv
+      - name: Generate base BOM
+        uses: https://hub.allspice.io/Actions/generate-bom@v0.8
+        with:
+          source_path: HardwareDesign.SDAX
+          output_file_name: base_bom.csv
 
-			- name: Checkout library repo
-				uses: actions/checkout@v4
-				with:
-					repository: Company/SystemCapture-Library
-					path: library
+      - name: Checkout library repo
+        uses: actions/checkout@v4
+        with:
+          repository: Company/SystemCapture-Library
+          path: library
 
-			- name: Enrich BOM with library data
-				uses: ./.  # or hub URL if published
-				with:
-					bom_file: base_bom.csv
-					library_path: library
-					part_number_column_name: Part Number
-					part_type_column_name: Part Type
-					search_ptf_column_name: AML
-					include_ptf_columns: AML,MANUFACTURER,STATUS,ORACLE_LINK
-					add_bom_columns: AML,Manufacturer,Status,ERP Link
-					output_path: complete_bom.csv
+      - name: Enrich BOM with library data
+        uses: ./.  # or hub URL if published
+        with:
+          bom_file: base_bom.csv
+          library_path: library
+          part_number_column_name: Part Number
+          part_type_column_name: Part Type
+          search_ptf_column_name: AML
+          include_ptf_columns: AML,MANUFACTURER,STATUS,ORACLE_LINK
+          add_bom_columns: AML,Manufacturer,Status,ERP Link
+          output_path: complete_bom.csv
 
-			- name: Upload complete BOM
-				uses: actions/upload-artifact@v4
-				with:
-					name: complete-bom
-					path: complete_bom.csv
+      - name: Upload complete BOM
+        uses: actions/upload-artifact@v4
+        with:
+          name: complete-bom
+          path: complete_bom.csv
 ```
 
 ## Selecting Column Names
