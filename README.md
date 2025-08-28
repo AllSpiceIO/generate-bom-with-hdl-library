@@ -41,6 +41,12 @@ A CSV file at `output_path` with original BOM columns plus the new columns named
 PTF row (or is left blank if no match). The file is not automatically uploaded—add an
 artifact/upload step if desired.
 
+## Variables & Secrets
+This action uses a personal access token (PAT) to be able to checkout the external
+library repository. The token should be stored as an Actions secret, either in the
+repository or in the organization. The example below references the secret named "PAT"
+as `secrets.PAT`.
+
 ## PTF Parsing Overview
 Each `.ptf` file is loosely parsed with these assumptions:
 - Canonical ordering: `FILE_TYPE`, `PART`, `CLASS`, title row, one or more data rows.
