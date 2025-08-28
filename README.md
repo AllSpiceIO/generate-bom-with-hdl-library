@@ -62,44 +62,72 @@ Assume you already generate a base BOM for a System Capture design and you have 
 separate library repository `Company/SystemCapture-Library` containing PTF files.
 
 ```yaml
-name: Build Complete BOM
-on: [push]
-
+name: Generate Complete BOM
+on:
+  push:
+  issues:
+    types: [opened, closed, reopened]
 jobs:
-  bom:
+  Generate_Full_BOM:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout design repo
         uses: actions/checkout@v4
-
-      - name: Generate base BOM
-        uses: https://hub.allspice.io/Actions/generate-bom@v0.8
-        with:
-          source_path: HardwareDesign.SDAX
-          output_file_name: base_bom.csv
-
       - name: Checkout library repo
         uses: actions/checkout@v4
         with:
-          repository: Company/SystemCapture-Library
-          path: library
-
-      - name: Enrich BOM with library data
-        uses: https://github.com/AllSpiceIO/generate-bom-with-hdl-library@v0.1
+          repository: Organization/DeHDL-Library
+          token: ${{ secrets.PAT }}
+          path: local_lib
+      - name: Generate BOM
+        uses: https://hub.allspice.io/Actions/generate-bom@v0.8
         with:
-          bom_file: base_bom.csv
-          library_path: library
-          part_number_column_name: Part Number
-          part_type_column_name: Part Type
-          search_ptf_column_name: AML
-          include_ptf_columns: AML,MANUFACTURER,STATUS,ORACLE_LINK
-          add_bom_columns: AML,Manufacturer,Status,ERP Link
+          # The path to the project file in your repo (.PrjPcb for Altium, .DSN for OrCad).
+          source_path: allspice_bom_gen_test.sdax
+          # [optional] A path to a YML file mapping columns to the component attributes
+          # they are from. This file must be provided.
+          # Default: 'columns.json'
+          columns: .allspice/columns.yml
+          # [optional] The path to the output file that will be generated.
+          # Default: 'bom.csv'
+          output_file_name: bom.csv
+          # [optional] A comma-separated list of columns to group the BOM by. If empty
+          # or not present, the BOM will be flat.
+          # Default: ''
+          group_by: "Internal PN"
+          # [optional] The variant of the project to generate the BOM for. If empty
+          # or not present, the BOM will be generated for the default variant.
+          # Default: ''
+          variant: ""
+      # Print bom.csv to terminal
+      - name: Show BOM
+        run: cat bom.csv
+      # Upload original BOM as artifact
+      - name: Upload file as artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: BOM.csv
+          path: bom.csv
+      # Generate Complete BOM
+      - name: Generate Complete BOM
+        uses: https://github.com/AllSpiceIO/generate-bom-with-hdl-library@4746bc315337b2fec113c08efc1e2403743759de
+        with:
+          bom_file: bom.csv
+          library_path: local_lib
           output_path: complete_bom.csv
-
-      - name: Upload complete BOM
-        uses: actions/upload-artifact@v4
+          part_number_column_name: "Internal PN"
+          part_type_column_name: "Library Name"
+          search_ptf_column_name: "PART_NUMBER"
+          include_ptf_columns: "AML,MANUFACTURER,DESCRIPTION"
+          add_bom_columns: "Manufacturer Part Number,Manufacturer,Description"
+      # Print complete_bom.csv to terminal
+      - name: Show complete BOM
+        run: cat complete_bom.csv
+      # Upload complete BOM as artifact
+      - name: Upload file as artifact
+        uses: actions/upload-artifact@v3
         with:
-          name: complete-bom
+          name: COMPLETE_BOM.csv
           path: complete_bom.csv
 ```
 
