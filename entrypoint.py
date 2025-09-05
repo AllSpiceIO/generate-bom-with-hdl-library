@@ -19,7 +19,7 @@ logger.addHandler(handler)
 ################################################################################
 def ingest_libraries(libroot) -> List[PTFLib]:
     available_libs = []
-    for ptf_path in Path(libroot).rglob(f"*pt.{'ptf'}"):
+    for ptf_path in Path(libroot).rglob(f"*.{'pt.ptf'}"):
         ptf_lib = PTFLib(ptf_path)
         available_libs.append(ptf_lib)
     return available_libs
