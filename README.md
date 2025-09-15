@@ -110,7 +110,7 @@ jobs:
           path: bom.csv
       # Generate Complete BOM
       - name: Generate Complete BOM
-        uses: https://github.com/AllSpiceIO/generate-bom-with-hdl-library@4746bc315337b2fec113c08efc1e2403743759de
+        uses: https://github.com/AllSpiceIO/generate-bom-with-hdl-library@v0.2
         with:
           bom_file: bom.csv
           library_path: local_lib
